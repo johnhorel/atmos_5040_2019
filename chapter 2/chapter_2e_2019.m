@@ -14,7 +14,7 @@ disp(' Chapter 2e')
 %requires an active token to run the above
 %returns a csv file with a header and text line that have been removed
 %4 columns: date(YYMMDDHHMM), wind speed (m/s) direction, wind gust(m/s)
-data_wind = csvread('data/wbb_wind_0618.csv');
+data_wind = csvread('../data/wbb_wind_0618.csv');
 tv=datevec(num2str(data_wind(:,1)),'yymmddHHMM');
 td=datenum(num2str(data_wind(:,1)),'yymmddHHMM');
 

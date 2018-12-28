@@ -4,19 +4,19 @@ clear all
 
 %read 3 column vectors of years, number of observations, and yearly lake level for 1895-2012 period
 %lake level (in ft)
-data_lev = csvread('data/gsl_yr.csv');
+data_lev = csvread('../data/gsl_yr.csv');
 year = data_lev(:,1);
 %convert level to meters
 lev = data_lev(:,3)*.3048;
 
 %read 2 column vectors of years and precipitation (in inches)
-data_ppt = csvread('data/utah_precip.csv');
+data_ppt = csvread('../data/utah_precip.csv');
 yearp = data_ppt(:,1);
 %convert precip to cm
 ppt = 2.54*data_ppt(:,2);
 
 %read 2 column vectors of years and annual mean temperature (in F) 
-data_t = csvread('data/utah_temp.csv');
+data_t = csvread('../data/utah_temp.csv');
 yeart = data_t(:,1);
 %convert to C
 temp = 5*(data_t(:,2) - 32)/9;
@@ -208,7 +208,7 @@ end
 % yearly data
 
 %read array of data with year,month,level
-data_levm = csvread('data/gsl_monthly.csv');
+data_levm = csvread('../data/gsl_monthly.csv');
 
 % salt lake level begins in 1903 through 2018
 %create 2d array levm for processing
