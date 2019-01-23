@@ -1,6 +1,6 @@
 close all
 clear all
-display('john horel 2017')
+display('john horel 2019')
 display('demonstrate central limit theorem')
 display(' ')
 sides = input('enter the number of sides on the die (6 or 10 or...): ')
@@ -22,6 +22,9 @@ ss = rdd;
 sm = rdd;
 end
 
+mean_sum = mean(ss);
+mean_mean = mean(sm);
+
 %now plot
 figure(1)
 %plot population
@@ -31,12 +34,13 @@ axis('tight')
 title('Population: each die is rolled independently')
 subplot(3,1,2)
 %plot sample sum
-hist(ss,sides*dice)
+histogram(ss,'BinMethod','integer')
 axis('tight')
 title('Sample sum')
 subplot(3,1,3)
 %plot sample mean
-hist(sm,sides*dice)
+vals = 1-.5*1/dice:1/dice:sides+.5*1/dice;
+histogram(sm,'BinEdges',vals)
 axis('tight')
 title('Sample mean')
 

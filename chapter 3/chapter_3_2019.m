@@ -14,20 +14,22 @@ disp('requires klamath_river_streamflow.csv')
 disp('requires utah_precip.csv')
 disp('requires weibullparam.m')
 
-%Notes Section 3a
+%Notes Section 3
+%figure 3.1
 %vennX: A,A and B,B,B and C, C,A and C,A and B and C
 vennX([142 0 83 25 104 79 0],.1)
-
+%figure 3.3
+vennX([142 79 104],.1)
 %Notes Section 3b
-% figure 3b.1
+% figure 3.5
 % requires stat toolbox
-normspec([-2,2],0,1)
+ normspec([.5,1],0,1)
 
-% figure 3b.2
+% figure 3.6
 % requires stat toolbox
-figure(2)
-x=-20:.01:20;
-f=cdf('norm',x,-5,15);
+figure(6)
+x=-3:.01:3;
+f=cdf('norm',x,0,1);
 plot(x,f)
 
 %read arrays of monthly lake level
@@ -43,7 +45,7 @@ stdl = std(lev,0);
 [sigmal,mul] = gaussfit(xl,hl);
 % compute gaussian parametric distribution
 pdfg_lev = 1/(sigmal * sqrt(2*pi))*exp(-(xl-mul).^2/(2*sigmal^2));
-figure(3)
+figure(7)
 subplot(2,1,1)
 bar(xl,hl);
 axis([xl(1) xl(length(xl)) 0 0.6]);
@@ -51,7 +53,7 @@ hold on
 plot(xl,pdfg_lev,'r')
 xlabel('Level (m)');
 ylabel('Fractional Contribution');
-title('Lake Level Histogram & Gaussian Fit: John Horel 12/29/18');
+title('Lake Level Histogram & Gaussian Fit: John Horel 1/20/19');
 
 % plot cumulative distribution
 subplot(2,1,2)
@@ -61,7 +63,7 @@ hold on
 axis([yl(1) yl(length(yl)) 0 1])
 xlabel('Level (m)');
 ylabel('Cumulative Distribution');
-title('Lake Level Cumulative Distribution & Gaussian Fit: John Horel 12/29/18');
+title('Lake Level Cumulative Distribution & Gaussian Fit: John Horel 1/20/19');
 nx = length(xl);
 cdfg_lev(1)=0;
 for i = 2:nx
@@ -82,7 +84,7 @@ stdt = std(cln,0);
 [sigmat,mut] = gaussfit(xt,ht);
 % compute gaussian parametric distribution
 pdfg_cln = exp(-(xt-mut).^2/(2*sigmat^2))/(sigmat * sqrt(2*pi));
-figure(4)
+figure(8)
 subplot(2,1,1)
 bar(xt,ht)
 axis([xt(1) xt(length(xt)) 0 0.1])
@@ -90,7 +92,7 @@ hold on
 plot(xt,pdfg_cln,'r')
 xlabel('Temperature (C)');
 ylabel('Fractional Contribution');
-title('Temperature Histogram & Gaussian Fit: John Horel 12/29/18');
+title('Temperature Histogram & Gaussian Fit: John Horel 1/20/19');
 
 % plot cumulative distribution
 subplot(2,1,2)
@@ -100,7 +102,7 @@ hold on
 axis([yt(1) yt(length(yt)) 0 1])
 xlabel('Temperature (C)');
 ylabel('Cumulative Distribution');
-title('Temperature Cumulative Distribution & Gaussian Fit: John Horel 12/29/18');
+title('Temperature Cumulative Distribution & Gaussian Fit: John Horel 1/20/19');
 nt = length(xt);
 cdfg_cln(1)=0;
 for i = 2:nt
@@ -110,7 +112,7 @@ cdfg_cln(i+1)= cdfg_cln(i);
 plot(yt,cdfg_cln,'r')
 
 
-% for figure 3b.5
+% for figure 3.9
 
 %p = normspec([-1,1],0,1);
 
@@ -118,7 +120,7 @@ plot(yt,cdfg_cln,'r')
 
 %p= normspec ([2,Inf],0,1);
 
-xq = norminv([0.05 0.95],0,1)
+%xq = norminv([0.05 0.95],0,1)
 
 %geometric distribution- see geocdf in statistics toolbox
 %xg- max number of years
@@ -130,7 +132,7 @@ sump = 0;
       cg(i) = sump + pg * (1-pg).^(i-1);
       sump = cg(i);
     end
-figure(6)
+figure(10)
 xgg = 1:1:300;
 stairs(xgg,cg);
 xlabel('Years from present');
@@ -138,18 +140,16 @@ ylabel('Cumulative probability that an event will recur');
 title('Geometric Distribution for 1 in 100 year event: John Horel 12/29/18');
 
 klamath=csvread('../data/klamath_river_streamflow.csv');
-figure(7)
+figure(11)
 yr = klamath(:,1);
 flow = klamath(:,2);
 bar(yr,flow)
-axis([1910 2017 0 600000])
+axis([1910 2018 0 600000])
 xlabel('Water Year');
 ylabel('Peak streamflow ft^3/s');
-title('Klamath River Peak Streamflow: John Horel 12/28/18');
+title('Klamath River Peak Streamflow: John Horel 1/20/19');
 hold on
 %going to add some lines to this figure in a bit
-
-%figure 3b.8
 
 fint = 25000;
 xf = 1000:25000:585000;
@@ -168,7 +168,7 @@ pdfg_flow = fint * exp(-(xf-muf).^2/(2*sigmaf^2))/(sigmaf * sqrt(2*pi));
 % compute weibull parametric distribution
 pdfw_flow = fint * (alpha/beta)*((xf/beta).^(alpha-1)).*exp(-(xf/beta).^alpha);
 
-figure(8)
+figure(12)
 subplot(1,2,1)
 bar(xf,hf)
 axis([xf(1) xf(length(xf)) 0 0.25])
@@ -177,7 +177,7 @@ plot(xf,pdfg_flow,'r')
 plot(xf,pdfw_flow,'g')
 xlabel('Peak Flow (ft^3/s)');
 ylabel('Fractional Contribution');
-title('Klamath Peak Flow, Gaussian & Weibull Fits: John Horel 12/28/18');
+title('Klamath Peak Flow, Gaussian & Weibull Fits: John Horel 1/20/19');
 
 % plot cumulative distribution
 subplot(1,2,2)
@@ -187,7 +187,7 @@ hold on
 axis([yf(1) yf(length(yf)) 0 1])
 xlabel('Peak flow (ft^3/s)');
 ylabel('Cumulative Distribution');
-title('Klamath CDF & Gaussian  and Weibull Fits: John Horel 12/28/18');
+title('Klamath CDF & Gaussian  and Weibull Fits: John Horel 1/20/19');
 nf = length(xf);
 cdfg_flow(nf)=1;
 cdfw_flow(nf)= 1;
@@ -217,7 +217,7 @@ rm = (id-0.3)/(lth+0.4);
 % now compute quantile values for empirical CDF
 qe = beta * (-log(1-rm)).^(1/alpha);
 
-figure(9)
+figure(13)
 subplot(1,2,1)
 % plotting a straight line which would be where the points 
 % should line up if a weibull fit is really appropriate
@@ -228,7 +228,7 @@ loglog(qe,flows,'x')
 axis([10000 600000 10000 600000]);
 xlabel('Weibull Estimate of Peak flow');
 ylabel('Observed Peak Flow (ft^3/s)');
-title('Klamath Quantile-Quantile Plot with Weibull Fit: John Horel 12/28/18');
+title('Klamath Quantile-Quantile Plot with Weibull Fit: John Horel 1/20/19');
 
 
 %create probability-probability plot for weibull for klamath flow
@@ -246,26 +246,26 @@ loglog(rm,opc,'x')
 axis([.001 1 .001 1])
 xlabel('Weibull Probability Estimate');
 ylabel('Observed Probability');
-title('Klamath Probability-Probability Plot with Weibull Fit: John Horel 12/28/18');
+title('Klamath Probability-Probability Plot with Weibull Fit: John Horel 1/20/19');
 
-figure(7)
+figure(11)
 % add some guestimates for one in a hundred year floods 
 %  weibull fit value for the one in hundred event
 qw99 = beta * (-log(1-0.99)).^(1/alpha);
-line([1910 2017],[qw99 qw99],'Color',[0,1,0]);
+line([1910 2018],[qw99 qw99],'Color',[0,1,0]);
 %to get the empirical 1 in 100 event
 % need to interpolate  from the empirical cdf
 emp99 = interp1q(cf',yf',.99);
-line([1910 2017],[emp99 emp99],'Color',[0,0,1]);
+line([1910 2018],[emp99 emp99],'Color',[0,0,1]);
 
-%figure 3.10
+%figure 3.14
 
-mu=-5.1;
-sig=5.9;
-normspec([mu-1.96*sig, mu+1.96*sig], mu, sig);
+mu=-5.2;
+sig=5.7;
+%normspec([mu-1.96*sig, mu+1.96*sig], mu, sig);
 
 
-%figure 3.11
+%figure 3.15
 
 [nd,nn] = size(year);
 for i=1:nd
@@ -276,7 +276,7 @@ for i=1:nd
     end
 end
 dates = datenum(year,mo,dy,hr,0,0);
-figure(10)
+figure(15)
 hold on
 x1 = [dates(1), dates(nd)];
 y1 = [ 6, 6];
@@ -292,86 +292,150 @@ ppt = ut_ppt(:,2)*2.54;
 p_yr = ut_ppt(:,1);
 no_p = length(ppt);
 meanp = mean(ppt);
+%sample std dev
 sdp = std(ppt,1);
 anomp = ppt - meanp;
 
-p = normspec([-1.96*sdp,1.96*sdp],0,sdp);
+p_1yr_5percent = normspec([-1.96*sdp,1.96*sdp],0,sdp);
 xpq = norminv([0.025 0.975],0,sdp);
 
 sd3 = sdp/sqrt(3);
-p = normspec([-1.96*sd3,1.96*sd3],0,sd3);
+p_3yr_5percent = normspec([-1.96*sd3,1.96*sd3],0,sd3);
 xpq3 = norminv([0.025 0.975],0,sd3);
 
-% now do for all 3 year periods in the record
-h03 = zeros(no_p-2,1);
-p03 = zeros(no_p-2,1);
+%[h,p,ci,stat]= ttest(valy,0,.05,'left');
+%Which first indicates that you need the statistics tool box to use
+%where on input valy is the vector of values in each 3-year sample
+%0 is the mean value for the null hypothesis
+%.05 is the significance level chosen (5%) 
+%and ‘left’ indicates that we are assuming that we have ruled out that large positive anomalies are relevant (the other options are ‘both’ a two-tailed test and ‘right’ where we rule out large negative anomalies, i.e., look for wet periods)
+%where on output h is a flag, 0 means the null hypothesis can not be rejected, 1 means it can be rejected
+%p is the significance level corresponding to the t value, the smaller the number the better.
+%ci is the confidence interval
+%p is the chance (risk) that the null hypothesis is incorrectly rejected
 
-for iyr=p_yr(1):p_yr(no_p-2)
+h03_one = zeros(1,no_p);
+p03_one = zeros(1,no_p);
+h03_two = zeros(1,no_p);
+p03_two = zeros(1,no_p);
+%one sided test. only asking about droughts
+for iyr=p_yr(2):p_yr(no_p-1)
     ii = iyr-1894;
-    valy = anomp(ii:ii+2);
+    %load valy with each 3 yr sample
+    valy = anomp(ii-1:ii+1);
 [h,p,ci,stat]= ttest(valy,0,.05,'left');
 h03_one(ii) = h;
-% store the values so that the cases where the null hypothesis can be
-% rejected appear near 1
-p03_one(ii) = 1- p;
+p03_one(ii) = 100*p;
 end
-x = p_yr(2):1:p_yr(no_p-1);
-figure(13)
+
+figure(18)
 subplot(4,1,1)
 bar(p_yr,anomp,'g')
+xlabel('Year');
+title('Utah precipitation anomalies (cm)')
 axis('tight')
 subplot(4,1,2)
 x1 = [p_yr(2), p_yr(no_p-1)];
-y1 = [ .95, .95];
-bar(x,p03_one,'r');
+y1 = [ 5, 5];
+bar(p_yr,p03_one,'r');
 hold on
 plot(x1,y1,'k');
 axis('tight')
+axis([p_yr(1) p_yr(no_p) 0 25])
+set(gca, 'YDir','reverse')
+xlabel('Year');
+title('Signifance Level- 1 sided test');
+
+%plot the 3yr periods for which the null hypothesis
+%can be rejected with a risk of 5% 
 subplot(4,1,3)
-bar(x,h03_one,'b');
+bar(p_yr,h03_one,'b');
 axis('tight')
+xlabel('Year');
+title('Reject Null Hypothesis- 1 sided test');
+
 %now repeat but do a two-sided t test
-for iyr=p_yr(1):p_yr(no_p-2)
+for iyr=p_yr(2):p_yr(no_p-1)
     ii = iyr-1894;
-    valy = anomp(ii:ii+2);
+    valy = anomp(ii-1:ii+1);
 [h,p,ci,stat]= ttest(valy,0,.05,'both');
 h03_two(ii) = h;
-% store the values so that the cases where the null hypothesis can be
-% rejected appear near 1
-p03_two(ii) = 1- p;
+p03_two(ii) = 100*p;
 end
 subplot(4,1,4)
-bar(x,h03_two,'k');
+bar(p_yr,h03_two,'k');
 axis('tight')
+xlabel('Year');
+title('Reject Null Hypothesis- 2 sided test, Wet or Dry periods');
 
-figure(15)
-subplot(3,1,1)
+%repeat doing 9 year periods
+%one sided test. only asking about droughts
+h09_one = zeros(1,no_p);
+p09_one = zeros(1,no_p);
+h09_two = zeros(1,no_p);
+p09_two = zeros(1,no_p);
+for iyr=p_yr(5):p_yr(no_p-4)
+    ii = iyr-1894;
+    %load valy with each 9 yr sample
+    valy = anomp(ii-4:ii+4);
+[h,p,ci,stat]= ttest(valy,0,.05,'left');
+h09_one(ii) = h;
+p09_one(ii) = 100*p;
+end
+
+figure(19)
+subplot(4,1,1)
 bar(p_yr,anomp,'g')
+xlabel('Year');
+title('Utah precipitation anomalies (cm)')
 axis('tight')
-subplot(3,1,2)
-x1 = [p_yr(2), p_yr(no_p-1)];
-y1 = [ .95, .95];
-bar(x,p03_two,'r');
+subplot(4,1,2)
+x9 = [p_yr(5), p_yr(no_p-4)];
+y1 = [ 5, 5];
+bar(p_yr,p09_one,'r');
 hold on
-plot(x1,y1,'k');
+plot(x9,y1,'k');
 axis('tight')
-subplot(3,1,3)
-bar(x,h03_two,'b');
-axis('tight')
+axis([p_yr(1) p_yr(no_p) 0 25])
+set(gca, 'YDir','reverse')
+xlabel('Year');
+title('Signifance Level- 1 sided test');
 
+%plot the 9yr periods for which the null hypothesis
+%can be rejected with a risk of 5% 
+subplot(4,1,3)
+bar(p_yr,h09_one,'b');
+axis('tight')
+xlabel('Year');
+title('Reject Null Hypothesis- 1 sided test');
+
+%now repeat but do a two-sided t test
+for iyr=p_yr(5):p_yr(no_p-4)
+    ii = iyr-1894;
+    valy = anomp(ii-4:ii+4);
+[h,p,ci,stat]= ttest(valy,0,.05,'both');
+h09_two(ii) = h;
+% store the values so that the cases where the null hypothesis can be
+% rejected appear near 1
+p09_two(ii) = 100*p;
+end
+subplot(4,1,4)
+bar(p_yr,h09_two,'k');
+axis('tight')
+xlabel('Year');
+title('Reject Null Hypothesis- 2 sided test, Wet or Dry periods');
 
 % a simple little comparison of how the t test values
-
-% are distributed for a sample of 3 vs. a sample of 30, 
+% are distributed for a sample of 3 vs. a sample of 30 years
 % which is almost the same as a gaussian
 % i.e. if your sample size is greater than 30
 % the t test values are distributed like a gaussian
-figure(14);
+figure(20);
 x = -5:.1:5;
-y = tpdf(x,3);
-z = normpdf(x,0,1);
-a = tpdf(x,30);
-plot(x,y,'r',x,a,'g',x,z,'b');
+sample_3yr = tpdf(x,3);
+gaussian = normpdf(x,0,1);
+sample_30yr = tpdf(x,30);
+plot(x,gaussian,'r',x,sample_3yr,'g',x,sample_30yr,'b');
 
 
 
