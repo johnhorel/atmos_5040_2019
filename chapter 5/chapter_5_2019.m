@@ -6,20 +6,20 @@ disp(' John Horel')
 disp(' ATMOS 5040/ Spring 2019')
 disp(' Chapter 5')
 disp(' Reproducing results in notes')
-disp('Requires MEI_1951_2016.txt')
-disp('Requires PNA_1951_2016.txt')
+disp('Requires MEI_1951_2018.txt')
+disp('Requires PNA_1951_2018.txt')
 
 % read MEI index
-load ../data/MEI_1951_2016.txt;
+load ../data/MEI_1951_2018.txt;
 
 % read PNA index
-load ../data/PNA_1951_2016.txt;
+load ../data/PNA_1951_2018.txt;
 
 % read through data and create time and array with both indices
 % but only use the january values
-time = MEI_1951_2016(:,1);
-val(:,1) = MEI_1951_2016(:,2);
-val(:,2) = PNA_1951_2016(:,2);
+time = MEI_1951_2018(:,1);
+val(:,1) = MEI_1951_2018(:,2);
+val(:,2) = PNA_1951_2018(:,2);
 
 % create std anom of indices
 val(:,1)= (val(:,1)-mean(val(:,1)))/std(val(:,1),1);
@@ -30,7 +30,7 @@ hold on;
 axis([1950 2021 -3 3]);
 xlabel('Time');
 ylabel('MEI-r PNA-b');
-title('MEI and PNA Indices: John Horel 2/8/17');
+title('MEI and PNA Indices: John Horel 2/9/19');
 hold on
 plot(time,val(:,2),'b')
 
@@ -48,7 +48,7 @@ F = (n-2)*r2/(1-r2);
 
 f01 = finv(.99,1,n)
 f05 = finv(.95,1,n)
-f01_50 = finv(.99,1,33)
+f01_50 = finv(.99,1,34)
 
 %bootstrapping requires statistics toolbox
 figure(2)
@@ -56,7 +56,7 @@ rhos10000 = bootstrp(10000,'corrcoef',val(:,1),val(:,2));
 hist(rhos10000(:,2),30)
 xlabel('Correlations');
 ylabel('# of Occurences');
-title('Bootstrapping MEI and PNA Correlation : John Horel 1/21/2019');
+title('Bootstrapping MEI and PNA Correlation : John Horel 2/9/2019');
 mean_rhos = mean(rhos10000(:,2));
 std_rhos = std(rhos10000(:,2),1);
 
@@ -84,31 +84,11 @@ est = reg + (1-regvar)*randn(1,n);
 scatter(val(:,2),est','b+')
 xlabel('Observed PNA');
 ylabel('Estimated PNA from MEI');
-title('Cross Validation of MEI/PNA: John Horel 1/21/2019');
+title('Cross Validation of MEI/PNA: John Horel 2/8/2019');
 % compute errors of the estimate
 err = val(:,2) - est';
 bias = mean(err);
 rmse = std(err,1);
-
-%field case for exam
-
-
-r = .37
-r2 = r^2;
-n = 46;
-SST = n;
-SSR = n * r2;
-SSE = n * (1-r2);
-MST = n/(n-1);
-MSR = n *r2;
-MSE = n * (1-r2)/(n-2);
-F = (n-2)*r2/(1-r2);
-alpha =.01;
-%define the threshold for the f distribution for alpha level
-f_null = finv(1-alpha,1,n);
-%determine the p values for each correlation's f value
-p = 1-fcdf(F,1,n);
-
 
 
     
