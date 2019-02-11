@@ -296,9 +296,10 @@ meanp = mean(ppt);
 sdp = std(ppt,1);
 anomp = ppt - meanp;
 
+%for Fig. 3.17
 p_1yr_5percent = normspec([-1.96*sdp,1.96*sdp],0,sdp);
 xpq = norminv([0.025 0.975],0,sdp);
-
+%for Fig 3.17
 sd3 = sdp/sqrt(3);
 p_3yr_5percent = normspec([-1.96*sd3,1.96*sd3],0,sd3);
 xpq3 = norminv([0.025 0.975],0,sd3);
