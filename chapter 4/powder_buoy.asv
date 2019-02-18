@@ -1,0 +1,110 @@
+
+clear all
+close all
+
+%load the data from the csv files
+file_1 = fopen('../data/cln_daily_precip.csv');
+file_2 = fopen('../data/buoy_51101_wave_height.csv');
+
+%cln precip
+%2018-10-01T00:00:00Z	2018-10-01T23:00:00Z	0
+%textscan is a function to read files that are a mix of character (%s), integers (%d)and
+%float (%f) values 
+
+%buoy
+%8 header lines
+% 51101	2018-10-01T01:00:00Z	
+
+cln = textscan(file_1,'%s%s%f','Delimiter',',');
+buoy = textscan(file_2,'%s%s%f','Delimiter',',','headerLines',8);
+
+%it is complicated dealing with I/O in matlab...
+
+%the curly bracket is syntax to denote a cell
+prec = cln{1,3};
+% the 2nd column of input has a cell array of times which is the beginning
+% time
+% times have the format '2017-08-24T00:00:00Z' so we have to define that as
+% follows
+tprec = datenum(cln{1,2},'yyyy-mm-ddTHH:MM:SSZ');
+tvprec = datevec(cln{1,2},'yyyy-mm-ddTHH:MM:SSZ');
+no_day = length(tprec);
+
+ht = buoy{1,3};
+tht = datenum(buoy{1,2},'yyyy-mm-ddTHH:MM:SSZ');
+tvht = datevec(buoy{1,2},'yyyy-mm-ddTHH:MM:SSZ');
+no_ht = length(tht);
+%simplify dates
+for i=1:no_day
+datc = datenum(tvprec(:,1),tht(:,2),tht(:,3));
+datb = datenum(tvht(:,1),tvht(:,2),tvht(:,3));
+%remove nans
+ht_i = find(~isnan(ht));
+hts = ht(ht_i);
+tvhts = tvht(ht_i,:);
+thts = tht(ht_i);
+
+%loop over all the prec days
+for i = 1:no_day
+    %find all the values of ht in that day
+    ht_di = find(datb==datc(i));
+    ht_max(i) = max(hts(ht_di));
+end
+    
+    
+
+
+%assign the times corresponding to ozone values to a contiguous vector
+oz_t = time(oz_i);
+% find length of vectors
+oz_n = length(oz);
+
+%open a figure window
+figure(1)
+%create a plot of ozone vs time
+plot(oz_t,oz,'c')
+%datetick labels in this case the x axis labeling the days
+datetick('x','dd');
+hold on
+title('MTMET Ozone. John Horel')
+xlabel('Day/Hour')
+ylabel('(ppb)')
+
+%compute a 8-h running mean over the data
+
+%find the time 4 hours into the period
+f_time = oz_t(1)+4./24.;
+%find the time 4 hours before the end of the period
+e_time = oz_t(oz_n)-4./24.;
+%define a tolerance in min to find the closest time to the end times
+twin = 2.5./(60*24);
+
+%finding the index of the times that is within 2.5 min of those times
+f_i = find(abs(oz_t-f_time)<twin);
+e_i = find(abs(oz_t-e_time)<twin);
+
+%begin by setting all the mean values to NaN for the beginning and ending
+%periods
+oz_m = NaN(oz_n,1);
+
+%loop over the period beginning 4 hours after the start and ending 4 hours before the
+%end
+for i = f_i:e_i
+    %compute mean over the 97 values corresponding to the 8 h window
+    oz_m(i) = mean(oz(i-48:i+48));
+end
+
+hold on
+plot(oz_t,oz_m,'r')
+
+%plot when the 8h average of ozone exceeded 70 ppb in heavier dot symbols
+oz_g70_i = find(oz_m>70);
+
+scatter(oz_t(oz_g70_i),oz_m(oz_g70_i),'r.','LineWidth',3)
+
+
+    
+    
+    
+
+    
