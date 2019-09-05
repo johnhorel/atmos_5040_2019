@@ -1,9 +1,9 @@
 <img src='./images/GOES16.jpg' width=150px align='right' style='padding-left:30px'>
 
-**Spring 2019**
+**Fall 2019**
 
-# ATMOS 5040/6040
-Code and other information for ATMOS 5040/6040, Environmental Statistics, during Spring 2019
+# ATMOS 5040
+Code and other information for ATMOS 5040, Environmental Statistics, during Fall 2019
 
 # Download this repository
 
